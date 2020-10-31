@@ -1,6 +1,6 @@
 # raxa_conta
 
-Aplicativo Flutter para dividir conta em dinheiro
+Aplicativo Flutter para dividir conta entre os amigos/familiares.
 
 ## Getting Started
 
