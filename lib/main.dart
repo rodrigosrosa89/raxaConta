@@ -14,16 +14,10 @@ class paginaInicial extends StatefulWidget {
 class _paginaInicialState extends State<paginaInicial> {
   TextEditingController qtdePessoasController = TextEditingController();
   TextEditingController valorContaController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _valorPessoa = "Informe seus dados";
 
   void _calcular() {
-    if (qtdePessoasController.text != null &&
-        qtdePessoasController.text.isEmpty) {
-      print("Gentileza informar quantidade de pessoas");
-    } else if (valorContaController.text != null &&
-        valorContaController.text.isEmpty) {
-      print("Gentileza informar um valor");
-    }
     double qtdePessoas = double.parse(qtdePessoasController.text);
     double valorConta = double.parse(valorContaController.text);
 
@@ -42,7 +36,7 @@ class _paginaInicialState extends State<paginaInicial> {
     });
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -56,6 +50,7 @@ class _paginaInicialState extends State<paginaInicial> {
           child: Padding(
         padding: EdgeInsets.all(10),
         child: Form(
+          key: _formKey,
           child: (Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -71,7 +66,14 @@ class _paginaInicialState extends State<paginaInicial> {
                       labelText: "Quantidade de pessoas",
                       labelStyle: TextStyle(color: Colors.blue)),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.blue, fontSize: 18)),
+                  style: TextStyle(color: Colors.blue, fontSize: 18),
+                  // ignore: missing_return
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Insira a quantidade de pessoas";
+                    }
+                  },
+              ),
               TextFormField(
                   keyboardType: TextInputType.number,
                   controller: valorContaController,
@@ -79,14 +81,25 @@ class _paginaInicialState extends State<paginaInicial> {
                       labelText: "Valor da conta",
                       labelStyle: TextStyle(color: Colors.blue)),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.blue, fontSize: 18)),
+                  style: TextStyle(color: Colors.blue, fontSize: 18),
+                // ignore: missing_return
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Insira o valor para conta";
+                  }
+                },
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 20),
                 child: Container(
                     height: 40,
                     child: RaisedButton(
                       onPressed: () {
-                        _calcular();
+                        if(_formKey.currentState.validate()) {
+                          _calcular();
+                          qtdePessoasController.clear();
+                          valorContaController.clear();
+                        }
                       },
                       color: Colors.blue,
                       child: Text(
